@@ -44,54 +44,122 @@ Build a Bob-powered OSINT tool that ingests a batch of mock social media posts, 
 
 ## 🛠️ Tech Stack
 
-| Category | Technologies |
+| Layer | Technology |
 |---|---|
-| **Languages** | [e.g., Python, TypeScript] |
-| **Frameworks** | [e.g., FastAPI, React] |
-| **IBM Technologies** | [e.g., watsonx.ai, IBM Bob, IBM Cloud] |
-| **Databases** | [e.g., PostgreSQL, Redis] |
-| **Other** | [e.g., Docker, GitHub Actions] |
+| **Language** | Python 3.14 |
+| **Web UI** | Streamlit |
+| **API Server** | FastAPI |
+| **AI / LLM** | IBM watsonx (optional refinement) |
+| **RAG** | [`rag.py`](rag.py) — custom Retrieval-Augmented Generation |
+| **Data** | JSON (synthetic, no external DB) |
+| **Hashing / Integrity** | SHA-256 (evidence chain) |
+| **Testing** | pytest |
+| **Similarity** | Jaccard / k-shingle (near-dup detection) |
+| **Config** | `.streamlit/config.toml` |
+| **Dependency Mgmt** | `pip` + [`requirements.txt`](requirements.txt) |
+
+**No external database. No real social media API. Fully self-contained Python stack.**
 
 ---
 
 ## 📁 Repository Structure
 
 ```
-├── src/                  # All source code
-├── docs/                 # Written documentation
-│   ├── problem-statement.md
-│   ├── solution-overview.md
-│   ├── architecture.md
-│   └── setup-guide.md
-├── demo/                 # Demo artifacts
-│   ├── screenshots/      # App screenshots
-│   └── demo-video-link.txt  # Link to demo video
-├── presentation/         # Slide deck
-└── submission.yaml       # Structured submission metadata
+```
+TRACE/
+│
+├── trace_engine.py        # Core engine — harm scoring, coordination, clustering, alerts
+├── dashboard.py           # Streamlit UI — alerts, network graph, timeline, RAG tab
+├── make_dataset.py        # Synthetic dataset generator (7 scenarios + background noise)
+├── evaluate.py            # Evaluation harness — precision, recall, false alarms across seeds
+├── rag.py                 # RAG (Retrieval-Augmented Generation) Q&A module
+├── requirements.txt       # Python dependencies
+├── README.md              # Project documentation
+├── BOB_LOG.md             # Bob assistant activity log
+│
+├── data/                  # Generated datasets (one folder per seed)
+│   ├── seed_42/
+│   │   ├── posts.json         # Synthetic input posts
+│   │   └── ground_truth.json  # Expected threat labels
+│   ├── seed_99/
+│   ├── seed_7/
+│   ├── seed_2024/
+│   └── seed_1337/
+│
+├── tests/
+│   ├── test_engine.py     # Unit tests for the TRACE engine
+│   └── __init__.py
+│
+└── .streamlit/
+    └── config.toml        # Streamlit theme/config
+```
+
+**6 core files, 5 seeded datasets, 1 test suite.**
 ```
 
 ---
 
 ## ⚡ How to Run
 
-> **Copy these exact steps from your [`docs/setup-guide.md`](docs/setup-guide.md)**
-
+### 1. Install Dependencies
 ```bash
-# 1. Clone the repo
-git clone https://github.com/[your-repo].git
-cd [your-repo]
-
-# 2. Install dependencies
-[your install command here]
-
-# 3. Configure environment
-cp .env.example .env
-# Edit .env with your values
-
-# 4. Run the project
-[your run command here]
+pip install -r requirements.txt
 ```
 
+---
+
+### 2. Generate the Dataset
+```bash
+# Default seed (42)
+python make_dataset.py
+
+# Custom seed
+python make_dataset.py --seed 99
+```
+
+---
+
+### 3. Run the Streamlit Dashboard
+```bash
+streamlit run dashboard.py
+```
+Then open **http://localhost:8501** in your browser.
+- Choose **Built-in demo** → click **Run demo analysis**
+- Or **Upload JSON** → select any `data/seed_42/posts.json`
+- Or **Paste JSON** → paste a raw post array
+
+---
+
+### 4. Run the Evaluation
+```bash
+# All 5 seeds (42, 99, 7, 2024, 1337)
+python evaluate.py
+
+# Custom seeds
+python evaluate.py --seeds 42 99
+```
+
+---
+
+### 5. Run the FastAPI Server
+```bash
+uvicorn trace_engine:app --reload
+```
+Then hit:
+- `GET  /health` — health check
+- `POST /analyze` — send `{ "posts": [...] }`
+- `GET  /demo` — run built-in demo
+
+---
+
+### 6. Run Tests
+```bash
+pytest tests/
+```
+
+---
+
+> **No API keys required** for basic use. IBM watsonx is optional — the engine falls back to rule-based scoring if not configured.
 ---
 
 ## 🖥️ Demo
