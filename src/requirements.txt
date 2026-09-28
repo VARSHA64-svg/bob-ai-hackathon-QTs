@@ -1,0 +1,12 @@
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pydantic>=2.0.0
+streamlit>=1.35.0
+pytest>=8.0.0
+
+# Optional – uncomment to enable semantic RAG
+# sentence-transformers>=2.7.0
+# numpy>=1.26.0
+
+# Optional – for watsonx.ai integration
+# requests is part of stdlib dependencies; no extra install needed
