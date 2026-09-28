@@ -1,4 +1,4 @@
-# 🚀 [Your Project Title Here]
+# 🚀 [1]TRACE [Threat Reconnaissance and Coordination Evidence Engine]
 
 > ⚠️ **Replace everything in `[ ]` brackets with your actual content before submission.**
 
@@ -8,18 +8,19 @@
 
 | Field | Value |
 |---|---|
-| **Team Name** | [Your Team Name] |
-| **Track** | [AI / DevOps / Sustainability / Open] |
-| **Team Lead** | [Name] — [email@ibm.com] |
-| **Members** | [Name 1], [Name 2], [Name 3] |
+| **Team Name** | [QTs] |
+| **Track** | [Open] |
+| **Team Lead** | [S. Sai Varsha] — [varsha641980@gmail.com] |
+| **Members** | [Srishti Prasad] |
 
 ---
 
 ## 🎯 Problem Statement
 
-> In 2–3 sentences: What problem does your project solve? Who experiences this problem?
+> Social Media Threat Intelligence Engine
 
-[Describe the real-world problem your project addresses. Be specific about who the user is and what pain point they face.]
+[Real Case: The 2022 Nupur Sharma controversy and 2020 Delhi riots — coordinated hashtag campaigns directly preceded communal violence in multiple cities. Police had no real-time tool to detect coordinated inauthentic behavior or emerging offline threats from online content patterns.
+Build a Bob-powered OSINT tool that ingests a batch of mock social media posts, detects coordinated inauthentic behavior signals, classifies threat type (incitement / targeted harassment / organized misinformation), maps to IPC/BNS provisions, and generates a time-stamped threat brief with recommended escalation steps for law enforcement.]
 
 ---
 
@@ -27,7 +28,7 @@
 
 > In 2–3 sentences: What did you build? How does it solve the problem above?
 
-[Describe your solution clearly. Explain the core mechanism — what makes it work.]
+[**TRACE (Threat Reconnaissance and Coordination Evidence Engine)** is a social media threat detection system built on fully synthetic data. We generated labelled datasets across 7 threat scenarios — incitement, harassment, misinformation, and coordinated inauthentic behaviour — using [`make_dataset.py`](make_dataset.py). The core engine in [`trace_engine.py`](trace_engine.py) clusters posts by hashtag, then scores each cluster on **harm** and **coordination** to produce `HIGH`, `MEDIUM`, or `LOW` alerts. A Streamlit dashboard in [`dashboard.py`](dashboard.py) visualises results interactively. Finally, [`evaluate.py`](evaluate.py) benchmarks engine accuracy across 5 random seeds using precision, recall, and false alarm metrics against ground truth labels.
 
 ---
 
